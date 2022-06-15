@@ -67,9 +67,9 @@ async def delete_item(request: Request, key: Union[str, int] = Form(...)):
         if item.key == key or str(item.key) == str(key):
             db.remove(item)
             return templates.TemplateResponse('deleteItemPage.html', context={'request': request,
-                                                                   'key': key,
-                                                                   'result': item.key}
-                                      )
+                                                                              'key': key,
+                                                                              'result': item.key}
+                                              )
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
@@ -94,16 +94,18 @@ async def update_item(request: Request, key: Union[str, int] = Form(...), value:
                                                date=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                                                version=str(previous_version+1.0)))
             return templates.TemplateResponse('updateItemPage.html', context={'request': request,
-                                                                   'key': key,
-                                                                   'value': value,
-                                                                   'result': item.key}
-                                      )
+                                                                              'key': key,
+                                                                              'value': value,
+                                                                              'result': item.key}
+                                              )
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
     )
 
 # to create a web page for fetch_item_value part of API, first we need to send a GET request
+
+
 @app.get('/api/v1/fetchItem')
 def def_page_fetch_item_value(request: Request):
     result = 'Enter key which you want to fetch value'
@@ -116,9 +118,9 @@ async def fetch_item_value(request: Request, key: Union[str, int] = Form(...)):
         # item.key: string & key: int
         if item.key == key or str(item.key) == str(key):
             return templates.TemplateResponse('fetchItemPage.html', context={'request': request,
-                                                                   'key': key,
-                                                                   'value': item.value}
-                                      )
+                                                                             'key': key,
+                                                                             'value': item.value}
+                                              )
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
@@ -132,16 +134,15 @@ def def_page_fetch_item_history(request: Request):
     return templates.TemplateResponse('fetchHistoryItemPage.html', context={'request': request, 'result': result})
 
 
-
 @app.post("/api/v1/fetchHistory")
 async def fetch_item_history(request: Request, key: Union[str, int] = Form(...)):
     for item in db:
         # item.key: string & key: int
         if item.key == key or str(item.key) == str(key):
             return templates.TemplateResponse('fetchHistoryItemPage.html', context={'request': request,
-                                                                   'key': key,
-                                                                   'history': item.history}
-                                      )
+                                                                                    'key': key,
+                                                                                    'history': item.history}
+                                              )
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
