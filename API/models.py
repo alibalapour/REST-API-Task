@@ -17,3 +17,7 @@ class Item(BaseModel):
     value: Union[int, str]   # current value
     history: Optional[List[History]]
 
+
+class ItemUpdateRequest(BaseModel):
+    key: Optional[Union[int, str]]
+    value: Optional[Union[int, str]]   # current value

@@ -1,7 +1,7 @@
 from typing import List, Union
 from uuid import UUID, uuid4
 from fastapi import FastAPI, HTTPException
-from models import Item, History
+from models import Item, History, ItemUpdateRequest
 from datetime import datetime
 
 
@@ -48,3 +48,19 @@ async def delete_item(key:Union[str, int]):
         status_code=404,
         detail=f'item with key: {key} was not found'
     )
+
+@app.put("/api/v1/users/{key}")
+async def update_item(item_update:ItemUpdateRequest, key:Union[str, int]):
+    for item in db:
+        if item.key == key or str(item.key) == str(key):
+            if item_update.value is not None:
+                item.value = item_update.value                          # update value
+                previous_version = float(item.history[-1].version)
+                item.history.insert(0, History(value = item.value,        # add history to the first of the list
+                 date = datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                 version=str(previous_version+1.0)))
+            return
+    raise HTTPException(
+        status_code=404,
+        detail=f'item with key: {key} was not found'
+    ) 
