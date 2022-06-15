@@ -8,7 +8,7 @@ from datetime import datetime
 class History(BaseModel):
     version: Optional[str] = '1.0'
     value: Union[int, str]  # value of corresponded version
-    date: Optional[str] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    date: Optional[str] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
 class Item(BaseModel):

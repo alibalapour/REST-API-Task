@@ -6,11 +6,11 @@ from models import Item, History
 app = FastAPI()
 
 db: List[Item] = [
-    Item(
+    Item(                     # just an example
         key = 1,
-        value = 'sfsfd',
+        value = 'one',
         history = [History(
-            value = 'sfsfd'
+            value = 'one'
         )]
     )
 ]
@@ -21,5 +21,12 @@ async def read_root():
 
 
 @app.get("/api/v1/users")
-async def fetch_users():
+async def fetch_items():
     return db;
+
+
+@app.post("/api/v1/users")
+async def set_items(item:Item):
+    item.history = [History(value = item.value)]
+    db.append(item)
+    return {'id': item.id}
