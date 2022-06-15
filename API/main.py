@@ -21,13 +21,12 @@ db: List[Item] = [
 
 
 @app.get("/")
-async def read_root(request: Request):
-    return templates.TemplateResponse('home.html', context={'request': request, 'result': "Hello There :)"})
+async def read_root():
+    return {"Hello There :)"}
 
 
 @app.get("/api/v1/items")
-async def fetch_items(request: Request):
-    return templates.TemplateResponse('home.html', context={'request': request, 'result': db})
+async def fetch_items():
     return db;
 
 
