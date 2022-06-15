@@ -33,7 +33,7 @@ async def fetch_items(request: Request):
 # to create a web page for set_item part of API, first we need to send a GET request
 @app.get('/api/v1/set')
 def def_page_set(request: Request):
-    result = 'Enter key & value'
+    result = 'Enter key & value which you want to add'
     return templates.TemplateResponse('setItemPage.html', context={'request': request, 'result': result})
 
 
@@ -56,11 +56,11 @@ async def set_item(request: Request, key: Union[str, int] = Form(...), value: Un
 # to create a web page for delete_item part of API, first we need to send a GET request
 @app.get('/api/v1/delete')
 def def_page_delete(request: Request):
-    result = 'Enter key'
+    result = 'Enter key which you want to delete'
     return templates.TemplateResponse('deleteItemPage.html', context={'request': request, 'result': result})
 
 
-@app.delete("/api/v1/delete")
+@app.post("/api/v1/delete")
 async def delete_item(request: Request, key: Union[str, int] = Form(...)):
     for item in db:
         # item.key: string & key: int
@@ -76,17 +76,28 @@ async def delete_item(request: Request, key: Union[str, int] = Form(...)):
     )
 
 
-@app.put("/api/v1/items/{key}")
-async def update_item(item_update: ItemUpdateRequest, key: Union[str, int]):
+# to create a web page for update_item part of API, first we need to send a GET request
+@app.get('/api/v1/update')
+def def_page_update(request: Request):
+    result = 'Enter key & value which you want to update'
+    return templates.TemplateResponse('updateItemPage.html', context={'request': request, 'result': result})
+
+
+@app.post("/api/v1/update")
+async def update_item(request: Request, key: Union[str, int] = Form(...), value: Union[str, int] = Form(...)):
     for item in db:
         if item.key == key or str(item.key) == str(key):
-            if item_update.value is not None:
-                item.value = item_update.value                          # update value
+            if value is not None:
+                item.value = value                          # update value
                 previous_version = float(item.history[0].version)
                 item.history.insert(0, History(value=item.value,        # add history to the first of the list
                                                date=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                                                version=str(previous_version+1.0)))
-            return
+            return templates.TemplateResponse('updateItemPage.html', context={'request': request,
+                                                                   'key': key,
+                                                                   'value': value,
+                                                                   'result': item.key}
+                                      )
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
