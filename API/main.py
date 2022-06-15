@@ -12,6 +12,7 @@ db: List[Item] = [
         key = 1,
         value = 'one',
         history = [History(
+            version = '1.0',
             value = 'one',
             date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         )]
@@ -30,8 +31,10 @@ async def fetch_items():
 
 @app.post("/api/v1/users")
 async def set_item(item:Item):
+    item.version = '1.0'
     item.history = [History(value = item.value,
      date = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))]
+    
     db.append(item)
     return {'id': item.id}
 date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -55,7 +58,7 @@ async def update_item(item_update:ItemUpdateRequest, key:Union[str, int]):
         if item.key == key or str(item.key) == str(key):
             if item_update.value is not None:
                 item.value = item_update.value                          # update value
-                previous_version = float(item.history[-1].version)
+                previous_version = float(item.history[0].version)
                 item.history.insert(0, History(value = item.value,        # add history to the first of the list
                  date = datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                  version=str(previous_version+1.0)))

@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 class History(BaseModel):
-    version: Optional[str] = '1.0'
+    version: str
     value: Union[int, str]  # value of corresponded version
     date: str
 
