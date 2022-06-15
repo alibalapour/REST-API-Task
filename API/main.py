@@ -103,25 +103,45 @@ async def update_item(request: Request, key: Union[str, int] = Form(...), value:
         detail=f'item with key: {key} was not found'
     )
 
+# to create a web page for fetch_item_value part of API, first we need to send a GET request
+@app.get('/api/v1/fetchItem')
+def def_page_fetch_item_value(request: Request):
+    result = 'Enter key which you want to fetch value'
+    return templates.TemplateResponse('fetchItemPage.html', context={'request': request, 'result': result})
 
-@app.get("/api/v1/items/{key}")
-async def fetch_item_value(key):
+
+@app.post("/api/v1/fetchItem")
+async def fetch_item_value(request: Request, key: Union[str, int] = Form(...)):
     for item in db:
         # item.key: string & key: int
         if item.key == key or str(item.key) == str(key):
-            return item.value
+            return templates.TemplateResponse('fetchItemPage.html', context={'request': request,
+                                                                   'key': key,
+                                                                   'value': item.value}
+                                      )
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
     )
 
 
-@app.get("/api/v1/items/history/{key}")
-async def fetch_item_history(key):
+# to create a web page for fetch_item_history part of API, first we need to send a GET request
+@app.get('/api/v1/fetchHistory')
+def def_page_fetch_item_history(request: Request):
+    result = 'Enter key which you want to fetch history'
+    return templates.TemplateResponse('fetchHistoryItemPage.html', context={'request': request, 'result': result})
+
+
+
+@app.post("/api/v1/fetchHistory")
+async def fetch_item_history(request: Request, key: Union[str, int] = Form(...)):
     for item in db:
         # item.key: string & key: int
         if item.key == key or str(item.key) == str(key):
-            return item.history
+            return templates.TemplateResponse('fetchHistoryItemPage.html', context={'request': request,
+                                                                   'key': key,
+                                                                   'history': item.history}
+                                      )
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
