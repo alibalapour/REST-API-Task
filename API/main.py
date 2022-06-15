@@ -30,21 +30,22 @@ async def fetch_items(request: Request):
     return templates.TemplateResponse('getItemsPage.html', context={'request': request, 'result': db})
 
 
+# to create a web page for set_item part of API, first we need to send a GET request
 @app.get('/api/v1/set')
-def form_post(request: Request):
+def def_page_set(request: Request):
     result = 'Enter key & value'
     return templates.TemplateResponse('setItemPage.html', context={'request': request, 'result': result})
 
 
 @app.post("/api/v1/set")
 async def set_item(request: Request, key: Union[str, int] = Form(...), value: Union[str, int] = Form(...)):
-    item = Item(key=key, value=value)
+    item = Item(key=key, value=value)               # creates an Item object
 
-    item.history = [History(version='1.0',
+    item.history = [History(version='1.0',          # sets history of item
                             value=value,
                             date=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))]
 
-    db.append(item)
+    db.append(item)                                 # adds item to database
     return templates.TemplateResponse('setItemPage.html', context={'request': request,
                                                                    'key': key,
                                                                    'value': value,
@@ -52,13 +53,23 @@ async def set_item(request: Request, key: Union[str, int] = Form(...), value: Un
                                       )
 
 
-@app.delete("/api/v1/items/{key}")
-async def delete_item(key: Union[str, int]):
+# to create a web page for delete_item part of API, first we need to send a GET request
+@app.get('/api/v1/delete')
+def def_page_delete(request: Request):
+    result = 'Enter key'
+    return templates.TemplateResponse('deleteItemPage.html', context={'request': request, 'result': result})
+
+
+@app.delete("/api/v1/delete")
+async def delete_item(request: Request, key: Union[str, int] = Form(...)):
     for item in db:
         # item.key: string & key: int
         if item.key == key or str(item.key) == str(key):
             db.remove(item)
-            return
+            return templates.TemplateResponse('deleteItemPage.html', context={'request': request,
+                                                                   'key': key,
+                                                                   'result': item.key}
+                                      )
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
