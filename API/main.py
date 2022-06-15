@@ -4,7 +4,7 @@ from models import Item, History, ItemUpdateRequest
 from datetime import datetime
 from fastapi.templating import Jinja2Templates
 
-
+templates = Jinja2Templates(directory='../templates/')
 app = FastAPI()
 
 db: List[Item] = [
@@ -21,26 +21,27 @@ db: List[Item] = [
 
 
 @app.get("/")
-async def read_root():
-    return {"Hello There :)"}
+async def read_root(request: Request):
+    return templates.TemplateResponse('home.html', context={'request': request, 'result': "Hello There :)"})
 
 
-@app.get("/api/v1/users")
-async def fetch_items():
+@app.get("/api/v1/items")
+async def fetch_items(request: Request):
+    return templates.TemplateResponse('home.html', context={'request': request, 'result': db})
     return db;
 
 
-@app.post("/api/v1/users")
+@app.post("/api/v1/items")
 async def set_item(item:Item):
-    item.version = '1.0'
-    item.history = [History(value = item.value,
+    item.history = [History(version='1.0', 
+     value = item.value,
      date = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))]
     
     db.append(item)
-    return {'id': item.id}
+    return {'key': item.key}
 
 
-@app.delete("/api/v1/users/{key}")
+@app.delete("/api/v1/items/{key}")
 async def delete_item(key:Union[str, int]):
     for item in db:
         if item.key == key or str(item.key) == str(key):      # item.key: string & key: int
@@ -52,7 +53,7 @@ async def delete_item(key:Union[str, int]):
     )
 
 
-@app.put("/api/v1/users/{key}")
+@app.put("/api/v1/items/{key}")
 async def update_item(item_update:ItemUpdateRequest, key:Union[str, int]):
     for item in db:
         if item.key == key or str(item.key) == str(key):
@@ -69,7 +70,7 @@ async def update_item(item_update:ItemUpdateRequest, key:Union[str, int]):
     )
 
 
-@app.get("/api/v1/users/{key}")
+@app.get("/api/v1/items/{key}")
 async def fetch_item_value(key):
     for item in db:
         if item.key == key or str(item.key) == str(key):      # item.key: string & key: int
@@ -80,7 +81,7 @@ async def fetch_item_value(key):
     )
 
 
-@app.get("/api/v1/users/history/{key}")
+@app.get("/api/v1/items/history/{key}")
 async def fetch_item_history(key):
     for item in db:
         if item.key == key or str(item.key) == str(key):      # item.key: string & key: int
