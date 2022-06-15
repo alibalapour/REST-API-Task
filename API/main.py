@@ -1,10 +1,13 @@
 from typing import List, Union
-from uuid import UUID, uuid4
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from models import Item, History, ItemUpdateRequest
 from datetime import datetime
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 
+templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 
 db: List[Item] = [
@@ -18,6 +21,8 @@ db: List[Item] = [
         )]
     )
 ]
+
+
 
 @app.get("/")
 async def read_root():
@@ -37,7 +42,6 @@ async def set_item(item:Item):
     
     db.append(item)
     return {'id': item.id}
-date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
 @app.delete("/api/v1/users/{key}")
