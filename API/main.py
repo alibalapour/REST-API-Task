@@ -3,11 +3,8 @@ from fastapi import FastAPI, HTTPException, Request
 from models import Item, History, ItemUpdateRequest
 from datetime import datetime
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 
 
-templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 
 db: List[Item] = [
@@ -21,7 +18,6 @@ db: List[Item] = [
         )]
     )
 ]
-
 
 
 @app.get("/")
