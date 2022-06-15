@@ -40,7 +40,6 @@ date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 @app.delete("/api/v1/users/{key}")
 async def delete_item(key:Union[str, int]):
     for item in db:
-        print(type(item.key), type(key))
         if item.key == key or str(item.key) == str(key):      # item.key: string & key: int
             db.remove(item)
             return
@@ -48,6 +47,7 @@ async def delete_item(key:Union[str, int]):
         status_code=404,
         detail=f'item with key: {key} was not found'
     )
+
 
 @app.put("/api/v1/users/{key}")
 async def update_item(item_update:ItemUpdateRequest, key:Union[str, int]):
@@ -63,4 +63,26 @@ async def update_item(item_update:ItemUpdateRequest, key:Union[str, int]):
     raise HTTPException(
         status_code=404,
         detail=f'item with key: {key} was not found'
-    ) 
+    )
+
+
+@app.get("/api/v1/users/{key}")
+async def fetch_item_value(key):
+    for item in db:
+        if item.key == key or str(item.key) == str(key):      # item.key: string & key: int
+            return item.value
+    raise HTTPException(
+        status_code=404,
+        detail=f'item with key: {key} was not found'
+    )
+
+
+@app.get("/api/v1/users/history/{key}")
+async def fetch_item_history(key):
+    for item in db:
+        if item.key == key or str(item.key) == str(key):      # item.key: string & key: int
+            return item.history
+    raise HTTPException(
+        status_code=404,
+        detail=f'item with key: {key} was not found'
+    )
