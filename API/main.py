@@ -1,6 +1,6 @@
 from typing import List, Union
 from fastapi import FastAPI, HTTPException, Request, Form
-from models import Item, History, ItemUpdateRequest
+from models import Item, History
 from datetime import datetime
 from fastapi.templating import Jinja2Templates
 
@@ -109,7 +109,7 @@ async def update_item(request: Request, key: Union[str, int] = Form(...), value:
 @app.get('/api/v1/fetchItem')
 def def_page_fetch_item_value(request: Request):
     result = 'Enter key which you want to fetch value'
-    return templates.TemplateResponse('fetchItemPage.html', context={'request': request, 'result': result})
+    return templates.TemplateResponse('fetchItemPage.html', context={'request': request})
 
 
 @app.post("/api/v1/fetchItem")
@@ -131,7 +131,7 @@ async def fetch_item_value(request: Request, key: Union[str, int] = Form(...)):
 @app.get('/api/v1/fetchHistory')
 def def_page_fetch_item_history(request: Request):
     result = 'Enter key which you want to fetch history'
-    return templates.TemplateResponse('fetchHistoryItemPage.html', context={'request': request, 'result': result})
+    return templates.TemplateResponse('fetchHistoryItemPage.html', context={'request': request})
 
 
 @app.post("/api/v1/fetchHistory")
