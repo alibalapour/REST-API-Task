@@ -17,6 +17,10 @@ $ git clone https://github.com/alibalapour/REST-API-Task.git
 # go the main directory of the repo
 $ cd  REST-API-Task
 
+# create and activate a virtual environment
+$ python3 -m venv .env
+$ source .env/bin/activate
+
 # install the requirements
 $ pip install -r requirements.txt
 
