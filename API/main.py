@@ -1,10 +1,10 @@
 from typing import List, Union
 from fastapi import FastAPI, HTTPException, Request, Form
-from models import Item, History
+from API.models import Item, History
 from datetime import datetime
 from fastapi.templating import Jinja2Templates
 
-templates = Jinja2Templates(directory='../templates/')
+templates = Jinja2Templates(directory='templates/')
 app = FastAPI()
 
 db: List[Item] = [
@@ -22,7 +22,7 @@ db: List[Item] = [
 
 @app.get("/")
 async def read_root(request: Request):
-    return templates.TemplateResponse('getItemsPage.html', context={'request': request, 'result': "Hello There :)"})
+    return templates.TemplateResponse('rootPage.html', context={'request': request, 'result': "Hello There :)"})
 
 
 @app.get("/api/v1/items")
