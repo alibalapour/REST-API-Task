@@ -30,9 +30,11 @@ async def fetch_items(request: Request):
     return templates.TemplateResponse('getItemsPage.html', context={'request': request, 'result': db})
 
 
-# to create a web page for set_item part of API, first we need to send a GET request
 @app.get('/api/v1/set')
 def def_page_set(request: Request):
+    '''
+    to create a web page for set_item part of API, first we need to send a GET request
+    '''
     result = 'Enter key & value which you want to add'
     return templates.TemplateResponse('setItemPage.html', context={'request': request, 'result': result})
 
@@ -53,9 +55,11 @@ async def set_item(request: Request, key: Union[str, int] = Form(...), value: Un
                                       )
 
 
-# to create a web page for delete_item part of API, first we need to send a GET request
 @app.get('/api/v1/delete')
 def def_page_delete(request: Request):
+    '''
+    to create a web page for delete_item part of API, first we need to send a GET request
+    '''
     result = 'Enter key which you want to delete'
     return templates.TemplateResponse('deleteItemPage.html', context={'request': request, 'result': result})
 
@@ -70,15 +74,17 @@ async def delete_item(request: Request, key: Union[str, int] = Form(...)):
                                                                               'key': key,
                                                                               'result': item.key}
                                               )
-    raise HTTPException(
+    raise HTTPException(                         # raise 404 exception if key is not found
         status_code=404,
         detail=f'item with key: {key} was not found'
     )
 
 
-# to create a web page for update_item part of API, first we need to send a GET request
 @app.get('/api/v1/update')
 def def_page_update(request: Request):
+    '''
+    to create a web page for update_item part of API, first we need to send a GET request
+    '''
     result = 'Enter key & value which you want to update'
     return templates.TemplateResponse('updateItemPage.html', context={'request': request, 'result': result})
 
@@ -98,16 +104,17 @@ async def update_item(request: Request, key: Union[str, int] = Form(...), value:
                                                                               'value': value,
                                                                               'result': item.key}
                                               )
-    raise HTTPException(
+    raise HTTPException(                      # raise 404 exception if key is not found
         status_code=404,
         detail=f'item with key: {key} was not found'
     )
 
-# to create a web page for fetch_item_value part of API, first we need to send a GET request
-
 
 @app.get('/api/v1/fetchItem')
 def def_page_fetch_item_value(request: Request):
+    '''
+    to create a web page for fetch_item_value part of API, first we need to send a GET request
+    '''
     result = 'Enter key which you want to fetch value'
     return templates.TemplateResponse('fetchItemPage.html', context={'request': request})
 
@@ -121,15 +128,17 @@ async def fetch_item_value(request: Request, key: Union[str, int] = Form(...)):
                                                                              'key': key,
                                                                              'value': item.value}
                                               )
-    raise HTTPException(
+    raise HTTPException(                     # raise 404 exception if key is not found
         status_code=404,
         detail=f'item with key: {key} was not found'
     )
 
 
-# to create a web page for fetch_item_history part of API, first we need to send a GET request
 @app.get('/api/v1/fetchHistory')
 def def_page_fetch_item_history(request: Request):
+    '''
+    to create a web page for fetch_item_history part of API, first we need to send a GET request
+    '''
     result = 'Enter key which you want to fetch history'
     return templates.TemplateResponse('fetchHistoryItemPage.html', context={'request': request})
 
@@ -143,7 +152,7 @@ async def fetch_item_history(request: Request, key: Union[str, int] = Form(...))
                                                                                     'key': key,
                                                                                     'history': item.history}
                                               )
-    raise HTTPException(
+    raise HTTPException(                         # raise 404 exception if key is not found
         status_code=404,
         detail=f'item with key: {key} was not found'
     )
